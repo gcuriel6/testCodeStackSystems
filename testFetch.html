@@ -4,26 +4,42 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+
     <title>Test</title>
 </head>
 <body>
 
-    <table id="tableUsers">
-        <thead>
-            <tr>
-                <th>id</th>
-                <th>name</th>
-                <th>email</th>
-                <th>gender</th>
-            </tr>
-        </thead>
-        <tbody id="bodyTableUsers">
-
-        </tbody>
-    </table>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="display-1">Users List</h1>
+                <input type="checkbox" name="" id="ch_activos"> Usuarios Activos
+            </div>
+            <div class="col-12">
+                <table id="tableUsers" class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>id</th>
+                            <th>name</th>
+                            <th>email</th>
+                            <th>gender</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyTableUsers">
+            
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     
 </body>
 <script>
+
+    let users;
     // Solicitud GET (Request).
     fetch('https://gorest.co.in/public/v2/users')
         // Exito
@@ -31,8 +47,9 @@
         .then(json => {
             let body = document.getElementById("bodyTableUsers");
             body.innerHTML = "";
-            const filtrados = json.filter(x => x.status == "active");
-            filtrados.map(user=>{
+            // const filtrados = json.filter(x => x.status == "active");
+            users = json;
+            users.map(user=>{
                 body.innerHTML += tableRow(user);
             });
         })
@@ -46,5 +63,22 @@
                         <td>${user.gender}</td>
                     </tr>`;
         };
+
+        document.getElementById("ch_activos").addEventListener("change",function(){
+            let body = document.getElementById("bodyTableUsers");
+            body.innerHTML = "";
+
+            if(this.checked == true){
+                const filtrados = users.filter(x => x.status == "active");
+                
+                filtrados.map(user=>{
+                    body.innerHTML += tableRow(user);
+                });
+            }else{
+                users.map(user=>{
+                    body.innerHTML += tableRow(user);
+                });
+            }
+        });
 </script>
 </html>
